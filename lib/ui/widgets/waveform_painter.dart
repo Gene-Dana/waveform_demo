@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:waveform_demo/core/models/waveform_data_model.dart';
+import 'package:waveform_demo/core/models/wave_data_model.dart';
 
 class WaveformPainter extends CustomPainter {
-  final WaveformData data;
+  final WaveData data;
   final int startingFrame;
   final double zoomLevel;
-  Paint painter;
+  var painter;
   final Color color;
   final double strokeWidth;
 
   WaveformPainter(this.data,
-      {this.strokeWidth = 1.0, this.startingFrame = 0, this.zoomLevel = 1, this.color = Colors.blue}) {
+      {this.strokeWidth = 1.0,
+      this.startingFrame = 0,
+      this.zoomLevel = 1,
+      this.color = Colors.blue}) {
     painter = Paint()
       ..style = PaintingStyle.fill
       ..color = color
@@ -20,11 +23,8 @@ class WaveformPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (data == null) {
-      return;
-    }
-
-    final path = data.path(size, fromFrame: startingFrame, zoomLevel: zoomLevel);
+    final path =
+        data.path(size, fromFrame: startingFrame, zoomLevel: zoomLevel);
     canvas.drawPath(path, painter);
   }
 

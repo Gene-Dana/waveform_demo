@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:waveform_demo/core/models/waveform_data_model.dart';
+import 'package:waveform_demo/core/models/wave_data_model.dart';
 import 'package:waveform_demo/ui/widgets/waveform_painter.dart';
 
 class PaintedWaveform extends StatefulWidget {
   PaintedWaveform({
-    Key key,
-    @required this.sampleData,
+    Key? key,
+    required this.sampleData,
   }) : super(key: key);
 
-  final WaveformData sampleData;
+  final WaveData sampleData;
 
   @override
   _PaintedWaveformState createState() => _PaintedWaveformState();
@@ -49,7 +49,8 @@ class _PaintedWaveformState extends State<PaintedWaveform> {
                         foregroundPainter: WaveformPainter(
                           widget.sampleData,
                           zoomLevel: zoomLevel,
-                          startingFrame: widget.sampleData.frameIdxFromPercent(startPosition),
+                          startingFrame: widget.sampleData
+                              .frameIdxFromPercent(startPosition),
                           color: Color(0xff3994DB),
                         ),
                       ),
@@ -82,7 +83,7 @@ class _PaintedWaveformState extends State<PaintedWaveform> {
               },
               value: startPosition,
             ),
-          )
+          ),
         ],
       ),
     );

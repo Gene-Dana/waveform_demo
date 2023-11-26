@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:waveform_demo/core/models/waveform_data_model.dart';
+import 'package:waveform_demo/core/models/wave_data_model.dart';
 import 'package:waveform_demo/core/services/waveform_data_loader.dart';
 import 'package:waveform_demo/ui/widgets/app_bar.dart';
 import 'package:waveform_demo/ui/widgets/bottom_app_bar.dart';
 
 class ClipperView extends StatelessWidget {
-  const ClipperView({Key key}) : super(key: key);
+  const ClipperView({Key? key}) : super(key: key);
 
   @override
   Widget build(context) {
@@ -19,11 +19,12 @@ class ClipperView extends StatelessWidget {
             Flexible(
               child: Container(
                 color: Colors.grey[900],
-                child: FutureBuilder<WaveformData>(
-                  future: loadWaveformData("loop.json"),
-                  builder: (context, AsyncSnapshot<WaveformData> snapshot) {
+                child: FutureBuilder<WaveData>(
+                  future: loadWaveData("loop.json"),
+                  builder: (context, AsyncSnapshot<WaveData> snapshot) {
                     if (snapshot.hasData) {
-                      return LayoutBuilder(builder: (context, BoxConstraints constraints) {
+                      return LayoutBuilder(
+                          builder: (context, BoxConstraints constraints) {
                         // adjust the shape based on parent's orientation/shape
                         // the waveform should always be wider than taller
                         var height;
@@ -34,7 +35,7 @@ class ClipperView extends StatelessWidget {
                         }
 
                         return ClipPath(
-                          clipper: WaveformClipper(snapshot.data),
+                          clipper: WaveformClipper(snapshot.data!),
                           child: Container(
                             height: height,
                             decoration: BoxDecoration(
@@ -53,7 +54,8 @@ class ClipperView extends StatelessWidget {
                         );
                       });
                     } else if (snapshot.hasError) {
-                      return Text("Error ${snapshot.error}", style: TextStyle(color: Colors.red));
+                      return Text("Error ${snapshot.error}",
+                          style: TextStyle(color: Colors.red));
                     }
                     return CircularProgressIndicator();
                   },
@@ -70,7 +72,7 @@ class ClipperView extends StatelessWidget {
 class WaveformClipper extends CustomClipper<Path> {
   WaveformClipper(this.data);
 
-  final WaveformData data;
+  final WaveData data;
 
   @override
   Path getClip(Size size) {
