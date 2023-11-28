@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:waveform_demo/core/models/wave_data_model.dart';
 import 'package:waveform_demo/core/services/waveform_data_loader.dart';
@@ -43,6 +45,56 @@ class ClipperView extends StatelessWidget {
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 stops: [0.1, 0.3, 0.9],
+                                colors: [
+                                  Color(0xffFEAC5E),
+                                  Color(0xffC779D0),
+                                  Color(0xff4BC0C8),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    } else if (snapshot.hasError) {
+                      return Text("Error ${snapshot.error}",
+                          style: TextStyle(color: Colors.red));
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                color: Colors.grey[900],
+                child: FutureBuilder<WaveData>(
+                  future: loadWaveData("loop.json"),
+                  builder: (context, AsyncSnapshot<WaveData> snapshot) {
+                    if (snapshot.hasData) {
+                      return LayoutBuilder(
+                          builder: (context, BoxConstraints constraints) {
+                        // adjust the shape based on parent's orientation/shape
+                        // the waveform should always be wider than taller
+                        var height;
+                        if (constraints.maxWidth < constraints.maxHeight) {
+                          height = constraints.maxWidth;
+                        } else {
+                          height = constraints.maxHeight;
+                        }
+
+                        return ClipPath(
+                          clipper: WaveformClipper(snapshot.data!),
+                          child: Container(
+                            height: height,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                stops: [
+                                  0.1 * Random().nextInt(100) / 100,
+                                  0.3 * Random().nextInt(100),
+                                  0.9 * Random().nextInt(100)
+                                ],
                                 colors: [
                                   Color(0xffFEAC5E),
                                   Color(0xffC779D0),
